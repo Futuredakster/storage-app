@@ -7,6 +7,11 @@ import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/actions/user.actions";
+import CloudConvert from 'cloudconvert';
+import { File } from "fetch-blob/file";
+import { Buffer } from 'node:buffer';
+
+const cloudConvert = new CloudConvert(process.env.CLOUDCONVERT_API_KEY!);
 
 const handleError = (error: unknown, message: string) => {
   console.log(error, message);
@@ -232,5 +237,83 @@ export async function getTotalSpaceUsed() {
     return parseStringify(totalSpace);
   } catch (error) {
     handleError(error, "Error calculating total space used:, ");
+  }
+}
+
+export async function handler({
+  fileUrl,
+  inputFormat,
+  outputFormat,
+  ownerId,
+  accountId,
+  path,
+}: HandlerProps) {
+  try {
+    const job = await cloudConvert.jobs.create({
+      tasks: {
+        "import-file": {
+          operation: "import/url",
+          url: fileUrl,
+        },
+        "convert-file": {
+          operation: "convert",
+          input: "import-file",
+          input_format: inputFormat,
+          output_format: outputFormat,
+        },
+        "export-file": {
+          operation: "export/url",
+          input: "convert-file",
+        },
+      },
+    });
+
+    const completedJob = await cloudConvert.jobs.wait(job.id);
+
+    const exportTask = completedJob.tasks.find(
+      (task) => task.name === "export-file" && task.status === "finished"
+    );
+
+    if (!exportTask?.result?.files?.length) {
+      throw new Error("No converted file found in export task");
+    }
+
+    const fileDownloadUrl = exportTask.result.files[0].url;
+
+    // Fetch the converted file as ArrayBuffer
+   const response = await fetch(fileDownloadUrl!);
+    if (!response.ok) throw new Error("Failed to download converted file");
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Add .name property
+    Object.defineProperty(buffer, "name", {
+      value: `converted.${outputFormat}`,
+      writable: false,
+      enumerable: true,
+      configurable: false,
+    });
+
+    // Tell TypeScript to ignore the type here
+    const fileForUpload = buffer as unknown as File;
+
+    const uploadedFile = await uploadFile({
+      file: fileForUpload,
+      ownerId,
+      accountId,
+      path,
+    });
+
+    return {
+      status: 200,
+      body: { uploadedFile },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      body: { error: error instanceof Error ? error.message : error },
+    };
   }
 }

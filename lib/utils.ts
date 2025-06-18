@@ -234,3 +234,34 @@ export const getFileTypesParams = (type: string) => {
       return ["document"];
   }
 };
+
+export const getPossibleExtensions = (type: string): string[] => {
+  switch(type.toLowerCase()) {
+    case 'pdf':
+      return ['pdf', 'docx', 'txt', 'html', 'md']; // example conversions for PDF
+
+    case 'docx':
+      return ['pdf', 'docx', 'txt', 'rtf'];
+
+    case 'txt':
+      return ['txt', 'pdf', 'docx', 'md'];
+
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff'];
+
+    case 'mp4':
+      return ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mp3', 'wav']; // includes audio extraction (mp3, wav)
+
+    case 'mp3':
+      return ['mp3', 'wav', 'aac', 'ogg'];
+
+    case 'wav':
+      return ['wav', 'mp3', 'aac', 'ogg'];
+
+    default:
+      return [type]; // fallback: just itself
+  }
+};

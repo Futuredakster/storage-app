@@ -74,3 +74,12 @@ declare interface ShareInputProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove: (email: string) => void;
 }
+
+declare interface HandlerProps {
+  fileUrl: string;
+  inputFormat: string;
+  outputFormat: string;
+  ownerId: string;
+  accountId: string;
+  path: string;
+}
