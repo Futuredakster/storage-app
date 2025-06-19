@@ -20,6 +20,8 @@ const config: Config = {
   			blue: '#56B8FF',
   			pink: '#EEA8FD',
   			orange: '#F9AB72',
+			tea: '#E4BDC1',
+			bue:	"#E0F2FE",
   			light: {
   				'100': '#333F4E',
   				'200': '#A3B2C7',

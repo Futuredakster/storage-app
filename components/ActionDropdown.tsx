@@ -33,6 +33,7 @@ import {
 import { usePathname } from "next/navigation";
 import { FileDetails, ShareInput } from "./ActionsModalContent";
 
+
 interface Props {
   file: Models.Document;
   $id: string;
@@ -274,13 +275,13 @@ const ActionDropdown = ({ file, $id, accountId }: Props) => {
               setAction({
   value: "convert",
   label: "Convert File",
-  icon: "/assets/icons/convert.svg", // ✅ placeholder icon path
+  icon: "/public/assets/icons/file-other.svg", // ✅ placeholder icon path
 });
               setIsModalOpen(true);
             }}
           >
             <Image
-              src="/assets/icons/convert.svg"
+              src="/public/assets/icons/file-other.svg"
               alt="convert"
               width={30}
               height={30}
