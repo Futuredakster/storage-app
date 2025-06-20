@@ -269,9 +269,18 @@ export async function handler({
     });
 
     const completedJob = await cloudConvert.jobs.wait(job.id);
+    
+
+    completedJob.tasks.forEach(task => {
+  console.log(`Task: ${task.name}, Status: ${task.status}`);
+  if (task.status === "error") {
+    console.log("Error message:", task.message);
+  }
+});
 
     const exportTask = completedJob.tasks.find(
       (task) => task.name === "export-file" && task.status === "finished"
+      
     );
 
     if (!exportTask?.result?.files?.length) {

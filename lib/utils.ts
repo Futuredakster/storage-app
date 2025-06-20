@@ -238,13 +238,13 @@ export const getFileTypesParams = (type: string) => {
 export const getPossibleExtensions = (type: string): string[] => {
   switch(type.toLowerCase()) {
     case 'pdf':
-      return ['pdf', 'docx', 'txt', 'html', 'md']; // example conversions for PDF
+      return [ 'docx', 'txt', 'html', 'md','xls']; // example conversions for PDF
 
     case 'docx':
-      return ['pdf', 'docx', 'txt', 'rtf'];
+      return ['pdf',  'txt', 'rtf'];
 
     case 'txt':
-      return ['txt', 'pdf', 'docx', 'md'];
+      return ['pdf', 'docx', 'md'];
 
     case 'jpg':
     case 'jpeg':
@@ -253,13 +253,16 @@ export const getPossibleExtensions = (type: string): string[] => {
       return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff'];
 
     case 'mp4':
-      return ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mp3', 'wav']; // includes audio extraction (mp3, wav)
+      return [ 'avi', 'mov', 'wmv', 'flv', 'mp3', 'wav']; // includes audio extraction (mp3, wav)
 
     case 'mp3':
-      return ['mp3', 'wav', 'aac', 'ogg'];
+      return [ 'wav', 'aac', 'ogg'];
 
     case 'wav':
-      return ['wav', 'mp3', 'aac', 'ogg'];
+      return [ 'mp3', 'aac', 'ogg'];
+
+      case 'xls':
+        return ['pdf',  'csv', 'ods'];
 
     default:
       return [type]; // fallback: just itself
