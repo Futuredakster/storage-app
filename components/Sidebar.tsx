@@ -17,7 +17,7 @@ const Sidebar = ({fullName,avatar,email}: Props) => {
     const pathname = usePathname()
   return (
     <aside className='sidebar'> 
-        <Link href="/">
+        <Link href="/dashboard">
         <Image src="/public/assets/icons/logo-full-brand.svg" alt="logo" width={160} height={50} className='hidden h-auto lg:block' />
         <Image src="/public/assets/icons/logo-brand.svg" alt="logo" width={52} height={52} className='lg:hidden'/>
         </Link>
